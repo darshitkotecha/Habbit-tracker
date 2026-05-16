@@ -2,6 +2,9 @@
 
 A premium, cricket-themed gamified habit tracker designed to turn consistency into a high-stakes sport. Score XP (runs), build your "Playing XI" team, and evolve from a rookie Initiate to a legendary Identity Builder.
 
+## 🌐 Live Demo
+**Experience the full app immediately:** [**Launch Habit Quest (AI Studio)**](https://ais-pre-cam633wko3f252aq3wlafd-55985620159.asia-southeast1.run.app)
+
 ![Habit Quest Banner](https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1200)
 
 ## 🚀 Vision
