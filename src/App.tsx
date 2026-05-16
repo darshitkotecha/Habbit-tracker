@@ -1,11 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { AuthProvider } from './contexts/AuthContext';
+import { DateProvider } from './contexts/DateContext';
 import Layout from './components/Layout';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
 import Arena from './pages/Arena';
 import Pavilion from './pages/Pavilion';
+import Achievements from './pages/Achievements';
 
 function AppContent() {
   const { profile, loading } = useAuth();
@@ -33,6 +35,18 @@ function AppContent() {
             </Layout>
           ) : (
             <AuthPage />
+          )
+        } 
+      />
+      <Route 
+        path="/achievements" 
+        element={
+          profile ? (
+            <Layout>
+              <Achievements />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
           )
         } 
       />
@@ -81,7 +95,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppContent />
+        <DateProvider>
+          <AppContent />
+        </DateProvider>
       </AuthProvider>
     </BrowserRouter>
   );

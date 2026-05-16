@@ -1,27 +1,53 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Trophy, LayoutDashboard, Users, ShoppingBag, LogOut, Menu, X, Calendar } from 'lucide-react';
+import { Trophy, LayoutDashboard, Users, ShoppingBag, LogOut, Menu, X, Calendar, Zap } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useDate } from '../contexts/DateContext';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Layout({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { logout, profile } = useAuth();
+  const { selectedDate, setSelectedDate } = useDate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   const navItems = [
     { name: 'Pitch', path: '/', icon: LayoutDashboard },
+    { name: 'Evolution', path: '/achievements', icon: Zap },
     { name: 'Arena', path: '/arena', icon: Users },
-    { name: 'Pavilion', path: '/pavilion', icon: ShoppingBag },
     { name: 'Trophies', path: '/trophies', icon: Trophy },
   ];
 
-  const today = new Date().toLocaleDateString('en-US', { 
-    weekday: 'short', 
-    month: 'short', 
-    day: 'numeric' 
-  });
+  const displayDate = (() => {
+    if (!selectedDate) return 'Select Date';
+    try {
+      const [year, month, day] = selectedDate.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'short', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    } catch (e) {
+      return selectedDate;
+    }
+  })();
+
+  const handleDateClick = () => {
+    if (dateInputRef.current) {
+      if (typeof (dateInputRef.current as any).showPicker === 'function') {
+        try {
+          (dateInputRef.current as any).showPicker();
+        } catch (e) {
+          dateInputRef.current.focus();
+        }
+      } else {
+        dateInputRef.current.focus();
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FFFFF0] text-[#004D40] font-sans selection:bg-[#004D40] selection:text-[#FFFFF0] flex flex-col">
@@ -36,14 +62,28 @@ export default function Layout({ children }: { children: ReactNode }) {
           >
             <Menu size={24} />
           </Button>
-
+ 
           <div className="flex flex-col items-center">
             <h1 className="text-sm font-black italic uppercase tracking-widest leading-none">
               {profile?.name || 'Guest'}
             </h1>
-            <div className="flex items-center gap-1 opacity-60 mt-1">
+            <div 
+              onClick={handleDateClick}
+              className="flex items-center gap-1 opacity-60 mt-1 hover:opacity-100 transition-opacity relative cursor-pointer px-2"
+            >
               <Calendar size={10} />
-              <span className="text-[10px] font-bold uppercase">{today}</span>
+              <span className="text-[10px] font-bold uppercase">{displayDate}</span>
+              <input 
+                type="date"
+                ref={dateInputRef}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                value={selectedDate}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    setSelectedDate(e.target.value);
+                  }
+                }}
+              />
             </div>
           </div>
 

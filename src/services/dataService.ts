@@ -4,7 +4,8 @@ import { UserProfile } from '../hooks/useAuth';
 const STORAGE_KEYS = {
   PROFILE: 'hq_profile',
   LOGS: 'hq_logs',
-  TEAMS: 'hq_teams'
+  TEAMS: 'hq_teams',
+  SNAPS: 'hq_snaps'
 };
 
 export const dataService = {
@@ -32,6 +33,32 @@ export const dataService = {
       logs.push(log);
     }
     localStorage.setItem(STORAGE_KEYS.LOGS, JSON.stringify(logs));
+  },
+
+  getSnaps: (date: string): string[] => {
+    try {
+      const data = localStorage.getItem(`${STORAGE_KEYS.SNAPS}_${date}`);
+      return data ? JSON.parse(data) : [];
+    } catch (e) {
+      console.error('Error loading snaps:', e);
+      return [];
+    }
+  },
+
+  saveSnap: (date: string, base64Image: string) => {
+    try {
+      const snaps = dataService.getSnaps(date);
+      snaps.push(base64Image);
+      localStorage.setItem(`${STORAGE_KEYS.SNAPS}_${date}`, JSON.stringify(snaps));
+    } catch (e) {
+      console.error('Error saving snap (possibly quota exceeded):', e);
+      alert('Storage is full! Could not save photo.');
+    }
+  },
+
+  getHabitStats: (habitId: string): number => {
+    const logs = dataService.getLogs();
+    return logs.filter(l => l.habitId === habitId && l.completed).length;
   },
 
   updatePoints: (points: number) => {

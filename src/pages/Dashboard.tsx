@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../hooks/useAuth';
+import { useDate } from '../contexts/DateContext';
 import Layout from '../components/Layout';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -15,7 +16,6 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { useRef } from 'react';
 
 const HABIT_ICONS: Record<string, any> = {
   wakeup: { icon: Zap, color: 'text-yellow-600', name: 'Early Wakeup' },
@@ -37,21 +37,22 @@ const TIER_GOALS = {
 
 export default function Dashboard() {
   const { profile } = useAuth();
+  const { selectedDate, setSelectedDate } = useDate();
   const [logs, setLogs] = useState<any[]>([]);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [todayLogs, setTodayLogs] = useState<Record<string, boolean>>({});
+  const [snaps, setSnaps] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [internalPoints, setInternalPoints] = useState(profile?.points || 0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
-  // Helper to get current week dates
-  const getWeekDates = () => {
-    const now = new Date();
-    const dayOfWeek = now.getDay(); // 0 is Sunday
-    const sunday = new Date(now);
-    sunday.setDate(now.getDate() - dayOfWeek);
+  // Helper to get week dates relative to a specific date
+  const getWeekDates = (targetDate: string) => {
+    const baseDate = new Date(targetDate.replace(/-/g, '/'));
+    const dayOfWeek = baseDate.getDay(); // 0 is Sunday
+    const sunday = new Date(baseDate);
+    sunday.setDate(baseDate.getDate() - dayOfWeek);
     
     return [...Array(7)].map((_, i) => {
       const date = new Date(sunday);
@@ -64,7 +65,7 @@ export default function Dashboard() {
     });
   };
 
-  const weekDates = getWeekDates();
+  const weekDates = getWeekDates(selectedDate);
 
   useEffect(() => {
     if (!profile) return;
@@ -77,9 +78,23 @@ export default function Dashboard() {
       selectedDayData[l.habitId] = l.completed;
     });
     setTodayLogs(selectedDayData);
+    setSnaps(dataService.getSnaps(selectedDate));
     setInternalPoints(profile.points);
     setLoading(false);
   }, [profile, selectedDate]);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        dataService.saveSnap(selectedDate, base64String);
+        setSnaps(prev => [...prev, base64String]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const toggleHabit = (habitId: string) => {
     if (!profile) return;
@@ -109,15 +124,16 @@ export default function Dashboard() {
   const progressPercent = Math.min(100, (profile.points / currentTierGoal) * 100);
 
   // Chart data prep
-  const chartData = [
-    { day: 'Mon', runs: 4 },
-    { day: 'Tue', runs: 3 },
-    { day: 'Wed', runs: 5 },
-    { day: 'Thu', runs: 2 },
-    { day: 'Fri', runs: 6 },
-    { day: 'Sat', runs: 4 },
-    { day: 'Sun', runs: 5 },
-  ]; // Mock for now, would aggregate from `logs`
+  const chartData = weekDates.map(wd => {
+    const dayRuns = logs.filter(l => l.date === wd.full && l.completed).length;
+    return {
+      day: wd.dayName,
+      runs: dayRuns,
+      fullDate: wd.full
+    };
+  });
+
+  const dayScore = logs.filter(l => l.date === selectedDate && l.completed).length;
 
   return (
     <div className="space-y-8">
@@ -135,13 +151,18 @@ export default function Dashboard() {
             <div>
               <p className="text-xs font-bold uppercase tracking-widest opacity-60">Player Status</p>
               <h1 className="text-3xl font-black italic">{profile.name}</h1>
-              <Badge className="bg-[#FFD700] text-[#004D40] hover:bg-[#FFD700] border-none font-bold mt-1">
-                {profile.tier}
-              </Badge>
+              <div className="flex items-center gap-2 mt-1">
+                <Badge className="bg-[#FFD700] text-[#004D40] hover:bg-[#FFD700] border-none font-bold">
+                  {profile.tier}
+                </Badge>
+                <Badge variant="outline" className="border-white/20 text-white/60 font-bold">
+                  Total: {profile.points}
+                </Badge>
+              </div>
             </div>
             <div className="text-right">
-              <p className="text-xs font-bold uppercase tracking-widest opacity-60">Total Runs</p>
-              <p className="text-5xl font-black italic text-[#FFD700]">{profile.points}</p>
+              <p className="text-xs font-bold uppercase tracking-widest opacity-60">Day Score</p>
+              <p className="text-5xl font-black italic text-[#FFD700]">{dayScore}</p>
             </div>
           </div>
           
@@ -290,13 +311,7 @@ export default function Dashboard() {
             accept="image/*" 
             className="hidden" 
             ref={fileInputRef} 
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                alert(`Uploaded: ${file.name}`);
-                // In a real app, you'd save this to storage or localDB
-              }
-            }}
+            onChange={handleFileChange}
           />
           <Button 
             size="sm" 
@@ -308,11 +323,24 @@ export default function Dashboard() {
           </Button>
         </div>
         <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
-          {[...Array(7)].map((_, i) => (
-            <div key={i} className="aspect-square bg-[#004D40]/5 rounded-lg border-2 border-dashed border-[#004D40]/20 flex items-center justify-center text-[#004D40]/20">
-              {i === 0 ? <ImageIcon size={20} className="text-[#004D40]/40" /> : <div className="text-xs font-bold italic">{i+1}</div>}
-            </div>
-          ))}
+          {[...Array(7)].map((_, i) => {
+            const snap = snaps[i];
+            return (
+              <button 
+                key={i} 
+                onClick={() => !snap && fileInputRef.current?.click()}
+                className="aspect-square bg-[#004D40]/5 rounded-lg border-2 border-dashed border-[#004D40]/20 flex items-center justify-center text-[#004D40]/20 overflow-hidden group relative"
+              >
+                {snap ? (
+                  <img src={snap} alt={`Snap ${i+1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                ) : (
+                  <div className="flex flex-col items-center gap-1 transition-opacity group-hover:opacity-100 opacity-60">
+                    {i === 0 ? <ImageIcon size={20} className="text-[#004D40]/40" /> : <div className="text-xs font-bold italic">{i+1}</div>}
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
       </section>
     </div>
