@@ -1,0 +1,10 @@
+{
+  "name": "Habit Quest",
+  "description": "A cricket-themed gamified habit tracker where users score runs by completing habits, build teams, and compete in matches while evolving from an Initiate to a Legend.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

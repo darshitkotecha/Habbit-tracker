@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and tracking metadata",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "age": { "type": "integer" },
+        "points": { "type": "integer" },
+        "selectedHabits": { "type": "array", "items": { "type": "string" } },
+        "tier": { "type": "string", "enum": ["Initiate", "Habit Builder", "Lifestyle Builder", "Identity Builder"] },
+        "teamId": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "points", "tier"]
+    },
+    "HabitLog": {
+      "title": "Habit Log",
+      "description": "Daily tracking log for a specific habit",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "habitId": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "completed": { "type": "boolean" },
+        "pointsEarned": { "type": "integer" },
+        "photoUrl": { "type": "string" }
+      },
+      "required": ["userId", "habitId", "date", "completed"]
+    },
+    "Team": {
+      "title": "Team",
+      "description": "A group of users competing together",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "members": { "type": "array", "items": { "type": "string" } },
+        "totalScore": { "type": "integer" },
+        "currentMatchId": { "type": "string" }
+      },
+      "required": ["id", "name", "members", "totalScore"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "A competition between two teams",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "teamA": { "type": "string" },
+        "teamB": { "type": "string" },
+        "scoreA": { "type": "integer" },
+        "scoreB": { "type": "integer" },
+        "status": { "type": "string", "enum": ["ongoing", "finished"] },
+        "winner": { "type": "string" },
+        "stakedPoints": { "type": "integer" },
+        "endDate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "teamA", "teamB", "status"]
+    },
+    "Reward": {
+      "title": "Reward",
+      "description": "Redeemable goodies",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "cost": { "type": "integer" },
+        "description": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "cost"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/users/{userId}/habits/{habitLogId}": {
+      "schema": "HabitLog",
+      "description": "Daily habit logs for a user"
+    },
+    "/teams/{teamId}": {
+      "schema": "Team",
+      "description": "Team data"
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Match outcomes"
+    },
+    "/rewards/{rewardId}": {
+      "schema": "Reward",
+      "description": "Available shop items"
+    }
+  }
+}
