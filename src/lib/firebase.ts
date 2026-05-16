@@ -4,7 +4,7 @@ import { getFirestore, Firestore } from 'firebase/firestore';
 // @ts-ignore
 import firebaseConfig from '../../firebase-applet-config.json';
 
-const isConfigValid = firebaseConfig && firebaseConfig.projectId;
+const isConfigValid = firebaseConfig && (firebaseConfig as any).projectId;
 
 let app: FirebaseApp | undefined;
 let db: Firestore | undefined;

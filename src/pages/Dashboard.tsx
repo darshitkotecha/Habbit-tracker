@@ -7,13 +7,15 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import { 
-  CheckCircle2, Camera, Trophy, Star, History, 
+  CheckCircle2, Image as ImageIcon, Trophy, Star, History, Upload,
   Zap, Droplets, Utensils, Target, BookOpen, Dumbbell, Moon, Heart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { useRef } from 'react';
 
 const HABIT_ICONS: Record<string, any> = {
   wakeup: { icon: Zap, color: 'text-yellow-600', name: 'Early Wakeup' },
@@ -36,11 +38,33 @@ const TIER_GOALS = {
 export default function Dashboard() {
   const { profile } = useAuth();
   const [logs, setLogs] = useState<any[]>([]);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [todayLogs, setTodayLogs] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const [internalPoints, setInternalPoints] = useState(profile?.points || 0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const todayStr = new Date().toISOString().split('T')[0];
+
+  // Helper to get current week dates
+  const getWeekDates = () => {
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 is Sunday
+    const sunday = new Date(now);
+    sunday.setDate(now.getDate() - dayOfWeek);
+    
+    return [...Array(7)].map((_, i) => {
+      const date = new Date(sunday);
+      date.setDate(sunday.getDate() + i);
+      return {
+        full: date.toISOString().split('T')[0],
+        dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+        dayNum: date.getDate()
+      };
+    });
+  };
+
+  const weekDates = getWeekDates();
 
   useEffect(() => {
     if (!profile) return;
@@ -48,14 +72,14 @@ export default function Dashboard() {
     const allLogs = dataService.getLogs();
     setLogs(allLogs);
     
-    const todayData: Record<string, boolean> = {};
-    allLogs.filter(l => l.date === todayStr).forEach(l => {
-      todayData[l.habitId] = l.completed;
+    const selectedDayData: Record<string, boolean> = {};
+    allLogs.filter(l => l.date === selectedDate).forEach(l => {
+      selectedDayData[l.habitId] = l.completed;
     });
-    setTodayLogs(todayData);
+    setTodayLogs(selectedDayData);
     setInternalPoints(profile.points);
     setLoading(false);
-  }, [profile]);
+  }, [profile, selectedDate]);
 
   const toggleHabit = (habitId: string) => {
     if (!profile) return;
@@ -65,7 +89,7 @@ export default function Dashboard() {
     
     const log = {
       habitId,
-      date: todayStr,
+      date: selectedDate,
       completed: newStatus,
       pointsEarned: newStatus ? 1 : -1,
       timestamp: Date.now()
@@ -131,10 +155,39 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
+      {/* Week Picker */}
+      <section className="bg-white p-4 rounded-2xl border-2 border-[#004D40]/5 shadow-sm overflow-x-auto no-scrollbar">
+        <div className="flex justify-between items-center min-w-[400px]">
+          {weekDates.map((date) => {
+            const isSelected = selectedDate === date.full;
+            const isToday = todayStr === date.full;
+            return (
+              <button
+                key={date.full}
+                onClick={() => setSelectedDate(date.full)}
+                className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all min-w-[50px] ${
+                  isSelected 
+                    ? 'bg-[#004D40] text-[#FFFFF0] shadow-lg scale-110' 
+                    : 'hover:bg-[#004D40]/5 text-[#004D40]/40'
+                }`}
+              >
+                <span className="text-[10px] font-black uppercase tracking-widest">{date.dayName}</span>
+                <span className="text-lg font-black italic leading-none">{date.dayNum}</span>
+                {isToday && !isSelected && <div className="w-1 h-1 bg-[#004D40] rounded-full mt-1" />}
+              </button>
+            )
+          })}
+        </div>
+      </section>
+
       {/* Today's Innings */}
       <section>
-        <h2 className="text-xl font-black italic uppercase tracking-tighter text-[#004D40] mb-4 flex items-center gap-2">
-          <Star className="fill-current" /> Today's Innings
+        <h2 className="text-xl font-black italic uppercase tracking-tighter text-[#004D40] mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Star className="fill-current" /> 
+            {selectedDate === todayStr ? "Today's Innings" : "Match Day"}
+          </div>
+          <span className="text-xs font-bold opacity-40">{selectedDate}</span>
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {profile.selectedHabits.map((hId) => {
@@ -230,16 +283,34 @@ export default function Dashboard() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-black italic uppercase tracking-tighter text-[#004D40] flex items-center gap-2">
-            <Camera /> Daily Snap
+            <ImageIcon size={20} /> Daily Snap
           </h2>
-          <Button size="sm" variant="outline" className="border-[#004D40] text-[#004D40]">
-            Update Log
+          <input 
+            type="file" 
+            accept="image/*" 
+            className="hidden" 
+            ref={fileInputRef} 
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                alert(`Uploaded: ${file.name}`);
+                // In a real app, you'd save this to storage or localDB
+              }
+            }}
+          />
+          <Button 
+            size="sm" 
+            variant="outline" 
+            className="border-[#004D40] text-[#004D40]"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload size={14} className="mr-2" /> Upload Snap
           </Button>
         </div>
         <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
           {[...Array(7)].map((_, i) => (
             <div key={i} className="aspect-square bg-[#004D40]/5 rounded-lg border-2 border-dashed border-[#004D40]/20 flex items-center justify-center text-[#004D40]/20">
-              {i === 0 ? <Camera size={20} className="text-[#004D40]/40" /> : <div className="text-xs font-bold italic">{i+1}</div>}
+              {i === 0 ? <ImageIcon size={20} className="text-[#004D40]/40" /> : <div className="text-xs font-bold italic">{i+1}</div>}
             </div>
           ))}
         </div>
