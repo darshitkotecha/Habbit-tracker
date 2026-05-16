@@ -1,4 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-cricket-green: #004D40;
+  --color-cricket-ivory: #FFFFF0;
+  --color-cricket-gold: #FFD700;
+}
+
+body {
+  @apply bg-[#FFFFF0] text-[#004D40] antialiased;
+}
+
+.font-black-italic {
+  @apply font-black italic tracking-tighter;
+}
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
