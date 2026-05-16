@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Zap, CheckCircle2, Trophy, Star, ArrowRight } from 'lucide-react';
+import { Zap, CheckCircle2, Trophy, Star, ArrowRight, Lightbulb } from 'lucide-react';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../hooks/useAuth';
 import { Card, CardContent } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const STAGES = [
   { id: 1, name: 'Habit Initiate', target: 7, color: '#32FFC8', label: '7D' }, // Mint Green
@@ -110,9 +112,16 @@ export default function Achievements() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-12"
       >
-        <div className="flex items-center gap-3 mb-2">
-          <Zap className="text-[#32FFC8]" />
-          <h1 className="text-2xl font-black italic uppercase tracking-widest text-[#32FFC8]">Your Evolution</h1>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-2">
+          <div className="flex items-center gap-3">
+            <Zap className="text-[#32FFC8]" />
+            <h1 className="text-2xl font-black italic uppercase tracking-widest text-[#32FFC8]">Your Evolution</h1>
+          </div>
+          <Link to="/insights">
+            <Button className="bg-[#32FFC8] text-[#0F172A] hover:bg-[#32FFC8]/90 font-black uppercase italic tracking-widest text-xs gap-2">
+              <Lightbulb size={16} /> Strategic Analysis
+            </Button>
+          </Link>
         </div>
         <p className="text-white/40 text-sm font-medium tracking-wide max-w-lg">
           The 4 psychological stages of transformation. From a simple click to absolute mastery of your personality.

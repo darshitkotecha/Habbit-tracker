@@ -1,6 +1,6 @@
 import { ReactNode, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Trophy, LayoutDashboard, Users, ShoppingBag, LogOut, Menu, X, Calendar, Zap } from 'lucide-react';
+import { Trophy, LayoutDashboard, Users, ShoppingBag, LogOut, Menu, X, Calendar, Zap, Lightbulb } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useDate } from '../contexts/DateContext';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const navItems = [
     { name: 'Pitch', path: '/', icon: LayoutDashboard },
     { name: 'Evolution', path: '/achievements', icon: Zap },
+    { name: 'Strategy', path: '/insights', icon: Lightbulb },
     { name: 'Arena', path: '/arena', icon: Users },
     { name: 'Trophies', path: '/trophies', icon: Trophy },
   ];
@@ -50,33 +51,33 @@ export default function Layout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFFF0] text-[#004D40] font-sans selection:bg-[#004D40] selection:text-[#FFFFF0] flex flex-col">
+    <div className="min-h-screen bg-[#0F172A] text-white font-sans selection:bg-[#32FFC8] selection:text-[#0F172A] flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#004D40]/10 bg-[#FFFFF0]/90 backdrop-blur-md h-16 flex items-center shrink-0">
+      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#0F172A]/80 backdrop-blur-md h-16 flex items-center shrink-0">
         <div className="container mx-auto px-4 flex items-center justify-between">
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={() => setIsSidebarOpen(true)}
-            className="text-[#004D40] hover:bg-[#004D40]/5"
+            className="text-white hover:bg-white/5"
           >
             <Menu size={24} />
           </Button>
  
           <div className="flex flex-col items-center">
-            <h1 className="text-sm font-black italic uppercase tracking-widest leading-none">
+            <h1 className="text-[10px] font-black italic uppercase tracking-widest leading-none opacity-40 mb-1">
               {profile?.name || 'Guest'}
             </h1>
             <div 
               onClick={handleDateClick}
-              className="flex items-center gap-1 opacity-60 mt-1 hover:opacity-100 transition-opacity relative cursor-pointer px-2"
+              className="flex items-center gap-1 hover:text-[#32FFC8] transition-colors relative cursor-pointer px-2"
             >
-              <Calendar size={10} />
-              <span className="text-[10px] font-bold uppercase">{displayDate}</span>
+              <Calendar size={10} className="text-[#32FFC8]" />
+              <span className="text-[10px] font-black uppercase tracking-widest">{displayDate}</span>
               <input 
                 type="date"
                 ref={dateInputRef}
-                className="absolute inset-0 opacity-0 cursor-pointer"
+                className="absolute inset-0 opacity-0 pointer-events-none"
                 value={selectedDate}
                 onChange={(e) => {
                   if (e.target.value) {
@@ -94,7 +95,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               logout();
               window.location.reload();
             }}
-            className="text-red-600 hover:bg-red-50"
+            className="text-white/40 hover:text-red-400 hover:bg-red-500/10"
           >
             <LogOut size={20} />
           </Button>
@@ -117,18 +118,18 @@ export default function Layout({ children }: { children: ReactNode }) {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-64 bg-[#FFFFF0] border-r border-[#004D40]/10 z-[70] shadow-2xl p-6"
+              className="fixed top-0 left-0 bottom-0 w-64 bg-[#0F172A] border-r border-white/10 z-[70] shadow-2xl p-6"
             >
               <div className="flex justify-between items-center mb-10">
                 <Link 
                   to="/" 
-                  className="flex items-center gap-2 font-bold text-2xl tracking-tighter text-[#004D40]"
+                  className="flex items-center gap-2 font-black text-2xl tracking-tighter text-white italic"
                   onClick={() => setIsSidebarOpen(false)}
                 >
-                  <span className="bg-[#004D40] text-[#FFFFF0] px-2 py-0.5 rounded italic">H.Q</span>
-                  HABIT QUEST
+                  <span className="bg-[#32FFC8] text-[#0F172A] px-2 py-0.5 rounded not-italic">H.Q</span>
+                  QUEST
                 </Link>
-                <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)}>
+                <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="text-white hover:bg-white/5">
                   <X />
                 </Button>
               </div>
@@ -142,13 +143,13 @@ export default function Layout({ children }: { children: ReactNode }) {
                       key={item.path}
                       to={item.path}
                       onClick={() => setIsSidebarOpen(false)}
-                      className={`flex items-center gap-4 p-4 rounded-xl font-bold uppercase tracking-widest text-sm transition-all ${
+                      className={`flex items-center gap-4 p-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] transition-all ${
                         isActive 
-                          ? 'bg-[#004D40] text-[#FFFFF0]' 
-                          : 'text-[#004D40]/60 hover:bg-[#004D40]/5 hover:text-[#004D40]'
+                          ? 'bg-[#32FFC8] text-[#0F172A] shadow-[0_0_20px_rgba(50,255,200,0.3)]' 
+                          : 'text-white/40 hover:bg-white/5 hover:text-white'
                       }`}
                     >
-                      <Icon size={20} />
+                      <Icon size={18} />
                       {item.name}
                     </Link>
                   );
@@ -158,7 +159,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               <div className="absolute bottom-6 left-6 right-6">
                 <Button 
                   variant="outline" 
-                  className="w-full border-red-600 text-red-600 hover:bg-red-50"
+                  className="w-full border-white/10 text-white/40 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20"
                   onClick={() => {
                     logout();
                     window.location.reload();
@@ -177,12 +178,12 @@ export default function Layout({ children }: { children: ReactNode }) {
       </main>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-[#004D40]/40 shrink-0">
-        Copyright by Darshit K By GDG baroda 2026
+      <footer className="py-8 text-center text-[8px] font-black uppercase tracking-[0.3em] text-white/10 shrink-0">
+        Habit Quest Elite Phase &copy; 2026
       </footer>
 
       {/* Mobile Quick Nav Bar */}
-      <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#004D40] text-[#FFFFF0] border border-[#FFFFF0]/10 p-2 rounded-full shadow-2xl w-[90%] max-w-sm">
+      <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#1E293B] text-white border border-white/10 p-2 rounded-full shadow-[0_10px_50px_rgba(0,0,0,0.5)] w-[90%] max-w-sm">
         <div className="flex items-center justify-around">
           {navItems.slice(0, 4).map((item) => {
             const Icon = item.icon;
@@ -192,7 +193,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 key={item.path}
                 to={item.path}
                 className={`flex flex-col items-center gap-1 p-3 rounded-full transition-all duration-300 ${
-                  isActive ? 'bg-[#FFFFF0] text-[#004D40] shadow-lg' : 'opacity-60 hover:opacity-100'
+                  isActive ? 'bg-[#32FFC8] text-[#0F172A] shadow-lg shadow-[#32FFC8]/20' : 'opacity-40 hover:opacity-100'
                 }`}
               >
                 <Icon size={20} />

@@ -31,95 +31,104 @@ export default function Arena() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 bg-[#0F172A] -m-4 p-4 md:-m-8 md:p-8 min-h-screen text-white">
       {/* Team Status */}
       {!profile?.teamId ? (
-        <Card className="border-2 border-dashed border-[#004D40]/30 bg-[#004D40]/5">
-          <CardHeader className="text-center">
-            <Users className="mx-auto size-12 text-[#004D40] opacity-40 mb-2" />
-            <CardTitle className="text-[#004D40]">No Team Yet</CardTitle>
-            <CardDescription>Cricketers are stronger in a team. Form yours now.</CardDescription>
+        <Card className="border-2 border-dashed border-white/10 bg-white/[0.03] backdrop-blur-md rounded-[2.5rem]">
+          <CardHeader className="text-center pt-12">
+            <div className="w-20 h-20 bg-[#32FFC8]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Users className="size-10 text-[#32FFC8]" />
+            </div>
+            <CardTitle className="text-2xl font-black italic uppercase tracking-widest text-[#32FFC8]">Solo Warrior</CardTitle>
+            <CardDescription className="text-white/40 font-medium uppercase tracking-widest text-[10px] mt-2">Cricketers are stronger in a team. Form your Playing XI now.</CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center">
-            <Button onClick={createTeam} className="bg-[#004D40] text-white">Form my Playing XI</Button>
+          <CardContent className="flex justify-center pb-12">
+            <Button onClick={createTeam} className="bg-[#32FFC8] text-[#0F172A] hover:bg-[#32FFC8]/90 font-black uppercase italic tracking-widest px-8 h-12 rounded-full">
+              Form my Playing XI
+            </Button>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid md:grid-cols-3 gap-6">
-          <Card className="md:col-span-2 border-2 border-[#004D40] shadow-[4px_4px_0px_rgba(0,77,64,1)]">
-            <CardHeader className="flex flex-row items-center justify-between border-b bg-[#004D40]/5">
+        <div className="grid md:grid-cols-3 gap-8">
+          <Card className="md:col-span-2 bg-[#1E293B] border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 bg-white/[0.02] p-8">
               <div>
-                <CardTitle className="text-[#004D40] flex items-center gap-2 italic">
-                  <Shield size={20} /> MY TEAM XI
+                <CardTitle className="text-white flex items-center gap-3 font-black underline italic decoration-[#32FFC8] underline-offset-8">
+                  <Shield size={24} className="text-[#32FFC8]" /> MY TEAM XI
                 </CardTitle>
               </div>
-              <Badge variant="outline" className="border-[#004D40] text-[#004D40]">Active Match</Badge>
+              <Badge className="bg-[#32FFC8]/10 text-[#32FFC8] border-[#32FFC8]/20 font-black italic uppercase tracking-widest text-[10px]">Active Match</Badge>
             </CardHeader>
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-8">
+            <CardContent className="p-8">
+              <div className="flex items-center justify-between mb-10">
                 <div className="flex -space-x-3">
-                  {[...Array(4)].map((_, i) => (
-                    <Avatar key={i} className="border-2 border-white ring-2 ring-[#004D40]/10">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} />
-                      <AvatarFallback>M</AvatarFallback>
+                  {[...Array(5)].map((_, i) => (
+                    <Avatar key={i} className="border-2 border-[#1E293B] ring-2 ring-[#32FFC8]/20 size-12">
+                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`} />
+                      <AvatarFallback className="bg-white/5 font-black">M</AvatarFallback>
                     </Avatar>
                   ))}
-                  <button className="size-10 rounded-full bg-[#004D40] text-white flex items-center justify-center border-2 border-white">
-                    <UserPlus size={16} />
+                  <button className="size-12 rounded-full bg-[#32FFC8] text-[#0F172A] flex items-center justify-center border-2 border-[#1E293B] hover:scale-110 transition-transform">
+                    <UserPlus size={18} />
                   </button>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold uppercase opacity-60">Team Score</p>
-                  <p className="text-3xl font-black italic text-[#004D40]">1,240 Runs</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-30 mb-1">Team Score</p>
+                  <p className="text-4xl font-black italic text-[#32FFC8] tracking-tighter">1,240 <span className="text-white text-lg">XP</span></p>
                 </div>
               </div>
 
-              <div className="bg-[#FFFFF0] border-2 border-[#004D40]/10 p-4 rounded-xl flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-100 text-red-600 rounded-lg"><Swords size={20} /></div>
+              <div className="bg-[#0F172A] border border-white/5 p-6 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.1)]">
+                    <Swords size={24} />
+                  </div>
                   <div>
-                    <p className="text-sm font-bold">vs The Challengers</p>
-                    <p className="text-[10px] uppercase opacity-60">Closes in 4h 20m</p>
+                    <p className="text-sm font-black italic uppercase tracking-widest text-red-200">vs The Challengers</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-30">Closes in 4h 20m</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-8 bg-white/5 px-8 py-3 rounded-2xl">
                   <div className="text-center">
-                    <p className="text-xs font-bold">842</p>
-                    <p className="text-[8px] uppercase">Us</p>
+                    <p className="text-xl font-black text-[#32FFC8]">842</p>
+                    <p className="text-[8px] font-black uppercase tracking-widest opacity-40">US</p>
                   </div>
-                  <div className="font-black italic">:</div>
+                  <div className="font-black italic text-2xl text-white/10">:</div>
                   <div className="text-center">
-                    <p className="text-xs font-bold">790</p>
-                    <p className="text-[8px] uppercase">Them</p>
+                    <p className="text-xl font-black text-red-400">790</p>
+                    <p className="text-[8px] font-black uppercase tracking-widest opacity-40">THEM</p>
                   </div>
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="bg-[#004D40]/5 gap-2">
+            <CardFooter className="bg-white/[0.02] p-8 gap-4 border-t border-white/5">
               <Input 
-                placeholder="Invite by email..." 
+                placeholder="INVITE BY EMAIL..." 
                 value={inviteEmail} 
                 onChange={e => setInviteEmail(e.target.value)}
-                className="bg-white border-[#004D40]/20"
+                className="bg-white/5 border-white/10 text-white placeholder:text-white/20 h-12 font-black italic uppercase tracking-widest text-[10px]"
               />
-              <Button onClick={inviteMember} size="sm" className="bg-[#004D40] text-white">Invite</Button>
+              <Button onClick={inviteMember} size="lg" className="bg-[#32FFC8] text-[#0F172A] hover:bg-[#32FFC8]/90 font-black uppercase italic tracking-widest">Invite</Button>
             </CardFooter>
           </Card>
 
-          <Card className="border-2 border-[#004D40]/10 shadow-none">
-            <CardHeader>
-              <CardTitle className="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
-                <Trophy size={16} /> LEADERBOARD
+          <Card className="bg-[#0F172A] border border-white/10 rounded-[2.5rem] shadow-none">
+            <CardHeader className="p-8 pb-4">
+              <CardTitle className="text-xs font-black italic uppercase tracking-[0.3em] flex items-center gap-3 text-white">
+                <Trophy size={16} className="text-[#FFD700]" /> LEADERBOARD
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="p-4 space-y-2">
               {teams.map((t, i) => (
-                <div key={t.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-[#004D40]/5 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-black opacity-30">#{i + 1}</span>
-                    <p className="text-sm font-bold">{t.name}</p>
+                <div key={t.id} className="flex items-center justify-between p-4 rounded-2xl hover:bg-white/5 transition-all group">
+                  <div className="flex items-center gap-4">
+                    <span className="text-[10px] font-black opacity-20 group-hover:opacity-100 group-hover:text-[#32FFC8] transition-colors">#{i + 1}</span>
+                    <p className="text-xs font-black uppercase italic tracking-wider">{t.name}</p>
                   </div>
-                  <p className="text-xs font-black italic">{t.totalScore} R</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-black italic text-[#32FFC8]">{t.totalScore}</p>
+                    <span className="text-[8px] font-black opacity-20">XP</span>
+                  </div>
                 </div>
               ))}
             </CardContent>
@@ -128,27 +137,36 @@ export default function Arena() {
       )}
 
       {/* Global Arena Feed */}
-      <section>
-        <h2 className="text-xl font-black italic uppercase tracking-tighter text-[#004D40] mb-4 flex items-center gap-2">
-          <MessageSquare size={20} /> Match Feed
+      <section className="pb-24">
+        <h2 className="text-xl font-black italic uppercase tracking-widest text-white mb-6 flex items-center gap-3">
+          <MessageSquare size={24} className="text-[#00D1FF]" /> Arena Broadcast
         </h2>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {[
-            { user: 'S. Tendulkar', msg: 'Just completed a 5k run! Getting those points.', points: '+15', type: 'up' },
-            { user: 'V. Kohli', msg: 'Lost a match to Alpha Squad. Points deducted.', points: '-20', type: 'down' },
+            { user: 'S. Tendulkar', msg: 'Just completed a 5k run! Ascension incoming.', points: '+15', type: 'up' },
+            { user: 'V. Kohli', msg: 'Lost a match to Alpha Squad. Back to the nets.', points: '-20', type: 'down' },
           ].map((item, i) => (
-            <div key={i} className="flex items-center gap-4 p-3 bg-white border-2 border-[#004D40]/5 rounded-xl shadow-sm">
-              <Avatar className="size-8">
-                <AvatarFallback>{item.user[0]}</AvatarFallback>
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-6 p-6 bg-white/[0.03] border border-white/5 rounded-[2rem] hover:border-white/10 transition-colors shadow-sm"
+            >
+              <Avatar className="size-12 ring-2 ring-white/5">
+                <AvatarFallback className="bg-white/5 font-black text-[#32FFC8]">{item.user[0]}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <p className="text-xs"><span className="font-bold">{item.user}</span> {item.msg}</p>
+                <p className="text-xs font-medium leading-relaxed">
+                  <span className="font-black italic uppercase tracking-wider text-white mr-2">{item.user}</span> 
+                  <span className="opacity-40">{item.msg}</span>
+                </p>
               </div>
-              <div className={`flex items-center gap-1 font-black italic text-sm ${item.type === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-                {item.type === 'up' ? <ArrowUp size={12} /> : <ArrowDown size={12} />}
+              <div className={`flex items-center gap-2 font-black italic text-lg ${item.type === 'up' ? 'text-[#32FFC8]' : 'text-red-400'}`}>
+                {item.type === 'up' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                 {item.points}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>

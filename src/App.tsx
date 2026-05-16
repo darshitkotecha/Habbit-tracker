@@ -8,6 +8,8 @@ import Dashboard from './pages/Dashboard';
 import Arena from './pages/Arena';
 import Pavilion from './pages/Pavilion';
 import Achievements from './pages/Achievements';
+import Insights from './pages/Insights';
+import Trophies from './pages/Trophies';
 
 function AppContent() {
   const { profile, loading } = useAuth();
@@ -51,6 +53,18 @@ function AppContent() {
         } 
       />
       <Route 
+        path="/insights" 
+        element={
+          profile ? (
+            <Layout>
+              <Insights />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
+        } 
+      />
+      <Route 
         path="/arena" 
         element={
           profile ? (
@@ -79,7 +93,7 @@ function AppContent() {
         element={
           profile ? (
             <Layout>
-              <div className="text-center py-20 italic text-[#004D40]/40">Your Trophy Cabinet is coming soon!</div>
+              <Trophies />
             </Layout>
           ) : (
             <Navigate to="/" />
