@@ -2,10 +2,29 @@
 
 A premium, cricket-themed gamified habit tracker designed to turn consistency into a high-stakes sport. Score XP (runs), build your "Playing XI" team, and evolve from a rookie Initiate to a legendary Identity Builder.
 
-## 🌐 Live Demo
-**Experience the full app immediately:** [**Launch Habit Quest (AI Studio)**](https://ais-pre-cam633wko3f252aq3wlafd-55985620159.asia-southeast1.run.app)
-
 ![Habit Quest Banner](https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1200)
+
+## 🌐 Live Access
+**Direct Preview:** [**Launch Habit Quest (Staging)**](https://ais-pre-cam633wko3f252aq3wlafd-55985620159.asia-southeast1.run.app)  
+*Note: If the link above isn't accessible, open the project in Google AI Studio and use the "Share" button to generate a public view-only link.*
+
+## 📸 Visual Walkthrough
+
+### 1. The Dynamic Pitch (Dashboard)
+[![Dashboard Preview](https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1200)](https://ais-pre-cam633wko3f252aq3wlafd-55985620159.asia-southeast1.run.app)
+*The heart of the experience. High-contrast dark UI featuring your daily habit "innings", real-time XP scoring, and a sleek consistency chart.*
+
+### 2. Evolution & Ascension
+[![Evolution Preview](https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&q=80&w=1200)](https://ais-pre-cam633wko3f252aq3wlafd-55985620159.asia-southeast1.run.app)
+*Tracking your transition from a rookie "Initiate" to an "Identity Builder". Glowing progress cards track your 7, 21, 90, and 365-day milestones.*
+
+### 3. The Arena (Multiplayer League)
+[![Arena Preview](https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1200)](https://ais-pre-cam633wko3f252aq3wlafd-55985620159.asia-southeast1.run.app)
+*Compete globally. View the live match feed showing other players' activities and invite friends to join your Playing XI squad.*
+
+### 4. Trophy Cabinet & Rewards
+[![Trophy Preview](https://images.unsplash.com/photo-1578262825743-a4e9c232956e?auto=format&fit=crop&q=80&w=1200)](https://ais-pre-cam633wko3f252aq3wlafd-55985620159.asia-southeast1.run.app)
+*Unlock premium badges for consistency and redeem your XP for items like the "Elite Habit Journal" or digital gift cards.*
 
 ## 🚀 Vision
 Habit Quest isn't just a logger; it's a strategic coaching platform. By combining high-octane "glassmorphism" aesthetics with psychological triggers (7/21/90/365 rules), we help you bridge the gap between *knowing* what to do and *actually* doing it.
